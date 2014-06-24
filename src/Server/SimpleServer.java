@@ -3,6 +3,8 @@ package Server;
 import java.net.*;
 import java.io.*;
 
+import javax.swing.InputMap;
+
 public class SimpleServer {
 	ServerSocket ss;
 	SimpleServer server;
@@ -58,13 +60,18 @@ class ClientThread implements Runnable {
 				
 				
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-				String line = br.readLine();
+
+				String  line = br.readLine();
 				System.out.println(line);
 				
 				// 至客戶端接收的資料
 				
-				String FromClient = in.readUTF();
+				String FromClient = line;
 				System.out.println("客戶端送來的訊息： "+FromClient);
+				
+				ss.getInetAddress();
+				out.writeUTF(InetAddress.getLocalHost().getHostAddress());
+				
 				ControlWMP wmp = new ControlWMP();
 				ControlPPT ppt = new ControlPPT();
 				ControlComputer cc = new ControlComputer();
@@ -74,49 +81,50 @@ class ClientThread implements Runnable {
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_01")) cc.reset(); //重新開機
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_02")) cc.powerOff(); //關機
 				
-				//WMP控制部分
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_00")) wmp.Close(); //關閉播放器
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_01")) wmp.Random(); //隨機播放
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_02")) wmp.Repick(); //重複播放
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_10")) wmp.Pause(); //繼續或暫停
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_11")) wmp.fullScreen(); //全畫面-取消全畫面
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_12")) wmp.PageUP(); //上一首
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_13")) wmp.PageDown(); //下一首
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_14")) wmp.Mute(); //靜音-取消靜音
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_15")) wmp.VolumeIncrease(); //增加音量
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_16")) wmp.VolumeReduce(); //降低音量
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_17")) wmp.FastPlay(); //加速播放
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_18")) wmp.SlowPlay(); //減速播放
-				else if(FromClient.equalsIgnoreCase("MRCode_WMP_19")) wmp.StopPlay(); //停止播放
-				
-				//PPT控制部分
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_00")) ppt.Close(); //關閉簡報
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_10")) ppt.Slide(); //進入投影片模式
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_11")) ppt.Esc(); //結束簡報 ESC
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_12")) ppt.PageUP(); //上一頁
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_13")) ppt.PageDown(); //下一頁
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_14")) ppt.VolumeIncrease(); //增加音量
-				else if(FromClient.equalsIgnoreCase("MRCode_PPT_15")) ppt.VolumeReduce(); //降低音量
-				
-				//接收到客戶端廣播欲取得伺服端IP資料
-				else if(FromClient.equalsIgnoreCase("MRCode_Return")) out.writeUTF(ss.getInetAddress().getLocalHost().getHostAddress());
-				
-				//客戶端要求資料夾內含的檔案資訊傳輸
-				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) out.writeUTF(f.FolderSelect(1));  //傳回音樂資料夾檔案
-				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) out.writeUTF(f.FolderSelect(2));  //傳回影片資料夾檔案
-				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeUTF(f.FolderSelect(3));  //傳回簡報資料夾檔案
-				
-				//客戶端要求開啟檔案
-				else
-				{
-					int Run_ok = f.Strat_File(FromClient.trim());
-					if(Run_ok==1){
-						out.writeUTF("執行檔案成功！");
-					}else if(Run_ok==-1){
-						out.writeUTF("執行檔案失敗！");
-					}else
-						out.writeUTF("錯誤的指令！");
-				}
+//				//WMP控制部分
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_00")) wmp.Close(); //關閉播放器
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_01")) wmp.Random(); //隨機播放
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_02")) wmp.Repick(); //重複播放
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_10")) wmp.Pause(); //繼續或暫停
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_11")) wmp.fullScreen(); //全畫面-取消全畫面
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_12")) wmp.PageUP(); //上一首
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_13")) wmp.PageDown(); //下一首
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_14")) wmp.Mute(); //靜音-取消靜音
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_15")) wmp.VolumeIncrease(); //增加音量
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_16")) wmp.VolumeReduce(); //降低音量
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_17")) wmp.FastPlay(); //加速播放
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_18")) wmp.SlowPlay(); //減速播放
+//				else if(FromClient.equalsIgnoreCase("MRCode_WMP_19")) wmp.StopPlay(); //停止播放
+//				
+//				//PPT控制部分
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_00")) ppt.Close(); //關閉簡報
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_10")) ppt.Slide(); //進入投影片模式
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_11")) ppt.Esc(); //結束簡報 ESC
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_12")) ppt.PageUP(); //上一頁
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_13")) ppt.PageDown(); //下一頁
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_14")) ppt.VolumeIncrease(); //增加音量
+//				else if(FromClient.equalsIgnoreCase("MRCode_PPT_15")) ppt.VolumeReduce(); //降低音量
+//				
+//				//接收到客戶端廣播欲取得伺服端IP資料
+//				else if(FromClient.equalsIgnoreCase("MRCode_Return")) out.writeUTF(ss.getInetAddress().getLocalHost().getHostAddress());
+//				
+//				//客戶端要求資料夾內含的檔案資訊傳輸
+//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) out.writeUTF(f.FolderSelect(1));  //傳回音樂資料夾檔案
+//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) out.writeUTF(f.FolderSelect(2));  //傳回影片資料夾檔案
+//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeUTF(f.FolderSelect(3));  //傳回簡報資料夾檔案
+//				
+//				//客戶端要求開啟檔案
+//				else
+//				{
+//					int Run_ok = f.Strat_File(FromClient.trim());
+//					if(Run_ok==1){
+//						out.writeUTF("執行檔案成功！");
+//					}else if(Run_ok==-1){
+//						out.writeUTF("執行檔案失敗！");
+//					}else
+//						out.writeUTF("錯誤的指令！");
+//				}
+//				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();//列印異常資訊

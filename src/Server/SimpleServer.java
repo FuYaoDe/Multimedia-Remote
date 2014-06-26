@@ -62,22 +62,25 @@ class ClientThread implements Runnable {
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
 				String  line = br.readLine();
-				System.out.println(line);
+	
 				
 				// 至客戶端接收的資料
-				
 				String FromClient = line;
-				System.out.println("客戶端送來的訊息： "+FromClient);
+				System.out.println("客戶端送來的訊息： \""+FromClient+"\"");
 				
 				ss.getInetAddress();
-				out.writeUTF(InetAddress.getLocalHost().getHostAddress());
+			
 				
 				ControlWMP wmp = new ControlWMP();
 				ControlPPT ppt = new ControlPPT();
 				ControlComputer cc = new ControlComputer();
 				Folder f = new Folder();
 				//電腦控制部分
-				if(FromClient.equalsIgnoreCase("MRCode_CC_00")) cc.sleep(); //休眠
+				if(FromClient.equalsIgnoreCase("Connect")) {
+					out.writeBytes("Connected");//開始連
+					System.out.println("發現客戶端！\n");
+				}
+				else if(FromClient.equalsIgnoreCase("MRCode_CC_00")) cc.sleep(); //休眠
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_01")) cc.reset(); //重新開機
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_02")) cc.powerOff(); //關機
 				
@@ -108,11 +111,11 @@ class ClientThread implements Runnable {
 //				//接收到客戶端廣播欲取得伺服端IP資料
 //				else if(FromClient.equalsIgnoreCase("MRCode_Return")) out.writeUTF(ss.getInetAddress().getLocalHost().getHostAddress());
 //				
-//				//客戶端要求資料夾內含的檔案資訊傳輸
-//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) out.writeUTF(f.FolderSelect(1));  //傳回音樂資料夾檔案
-//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) out.writeUTF(f.FolderSelect(2));  //傳回影片資料夾檔案
-//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeUTF(f.FolderSelect(3));  //傳回簡報資料夾檔案
-//				
+				//客戶端要求資料夾內含的檔案資訊傳輸
+				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) out.writeUTF(f.FolderSelect(1));  //傳回音樂資料夾檔案
+				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) out.writeUTF(f.FolderSelect(2));  //傳回影片資料夾檔案
+				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeUTF(f.FolderSelect(3));  //傳回簡報資料夾檔案
+				
 //				//客戶端要求開啟檔案
 //				else
 //				{

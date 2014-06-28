@@ -76,9 +76,10 @@ class ClientThread implements Runnable {
 				ControlComputer cc = new ControlComputer();
 				Folder f = new Folder();
 				//電腦控制部分
+				
 				if(FromClient.equalsIgnoreCase("Connect")) {
 					out.writeBytes("Connected");//開始連
-					System.out.println("發現客戶端！\n");
+					System.out.println("發現客戶端！");
 				}
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_00")) cc.sleep(); //休眠
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_01")) cc.reset(); //重新開機
@@ -128,6 +129,7 @@ class ClientThread implements Runnable {
 //						out.writeUTF("錯誤的指令！");
 //				}
 //				
+				if(!FromClient.equalsIgnoreCase("Connect")) out.writeBytes(FromClient);//送回指令
 			}
 		} catch (Exception e) {
 			e.printStackTrace();//列印異常資訊

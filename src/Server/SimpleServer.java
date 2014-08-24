@@ -114,8 +114,10 @@ class ClientThread implements Runnable {
 				//客戶端要求資料夾內含的檔案資訊傳輸
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) out.writeUTF(f.FolderSelect(1));  //傳回音樂資料夾檔案
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) out.writeUTF(f.FolderSelect(2));  //傳回影片資料夾檔案
-				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeUTF(f.FolderSelect(3));  //傳回簡報資料夾檔案
-				
+//				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeUTF(f.FolderSelect(3));  //傳回簡報資料夾檔案
+				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) out.writeBytes("Test1.ppt//sTest2.ppt//sTest3.ppt//sTest2.ppt//s");  //傳回簡報資料夾檔案
+				//Test1.ppt//sTest2.ppt//sTest3.ppt//sTest2.ppt//s
+				//格式 檔名.副檔案名//s檔名.副檔案名//s 
 //				//客戶端要求開啟檔案
 //				else
 //				{

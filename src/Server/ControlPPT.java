@@ -55,7 +55,11 @@ public class ControlPPT {
 	 *------------------------------------------------------------*/
 	public void Slide(){ // 進入投影片模式
 		try {
+
+			System.out.println("robot.keyPress");
 			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_F5);
+			robot.keyRelease(KeyEvent.VK_F5);
 			robot.keyPress(KeyEvent.VK_F5);
 			robot.keyRelease(KeyEvent.VK_F5);
 		} catch (AWTException e) {

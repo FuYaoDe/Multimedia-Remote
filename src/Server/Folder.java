@@ -37,8 +37,10 @@ public class Folder { //用於取得資料夾內的檔案
 				//File = Point_File;
 				break;
 		}
-		if(File==null)
+		if(File==null){
+		System.out.print("no file");
 			return "NoFile";
+		}
 		else
 			return File;
 	}
@@ -62,6 +64,7 @@ public class Folder { //用於取得資料夾內的檔案
 				"\\Program Files (x86)\\Microsoft Office\\OFFICE11\\POWERPNT.EXE ",
 				"\\Program Files (x86)\\Microsoft Office\\OFFICE12\\POWERPNT.EXE ",
 				"\\Program Files (x86)\\Microsoft Office\\OFFICE14\\POWERPNT.EXE ",
+				"\\Program Files (x86)\\Microsoft Office\\Office15\\POWERPNT.EXE ",
 		};
 		File myPnt;
 		String Full_File;
@@ -84,6 +87,7 @@ public class Folder { //用於取得資料夾內的檔案
 		for(int num=0; num<ppt_exe.length; num++ ){
 			myPnt = new File(winPath.substring(0, 2)+ppt_exe[num]);
 			if(myPnt.exists()){ //PPT存在
+				System.out.println("PPT EXIST");
 				Have_PPT = true;
 				Full_File_PPT = winPath.substring(0, 2)+ppt_exe[num];
 				break;
@@ -91,7 +95,10 @@ public class Folder { //用於取得資料夾內的檔案
 		}
 		if(!Have_PPT){ //PPT不存在
 			Full_File_PPT = "";
+			System.out.println("PPT NOT EXIST");
 		}
+		System.out.printf("Run_File=%s",Run_File[0]);
+		System.out.printf("Run_File=%s",Run_File[1]);
 		if(Run_File[0].equalsIgnoreCase("MRCode_Run_Music")){ //執行音樂資料夾檔案
 			if(Full_File_WMP.isEmpty()) return 0;
 			for(int i=1; i < Run_File.length; i++)
@@ -103,6 +110,8 @@ public class Folder { //用於取得資料夾內的檔案
 			Full_File_WMP += "\""+GUI.getVideoPath()+Run_File[1]+"\"";
 			Full_File = Full_File_WMP;
 		}else if(Run_File[0].equalsIgnoreCase("MRCode_Run_Documents")){ //執行PPT資料夾檔案
+
+			System.out.println("MRCode_Run_Documents");
 			if(Full_File_PPT.isEmpty()) return 0;
 			Full_File_PPT += "\""+GUI.getPointPath()+Run_File[1]+"\"";
 			Full_File = Full_File_PPT;
@@ -156,6 +165,7 @@ public class Folder { //用於取得資料夾內的檔案
 					File += controlFolder.getName() + "//s"; // //s是結合符號，等候傳送到客戶端可以進行拆解
 			}
 		}
+		System.err.println(File);
 		return File;
 	}
 }

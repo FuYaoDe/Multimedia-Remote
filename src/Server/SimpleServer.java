@@ -113,13 +113,14 @@ class ClientThread implements Runnable {
 				else if(FromClient.equalsIgnoreCase("MRCode_Return")) out.writeUTF(ss.getInetAddress().getLocalHost().getHostAddress());
 //				
 				//客戶端要求資料夾內含的檔案資訊傳輸
+
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) 
 					out.writeBytes(f.FolderSelect(1));  //傳回音樂資料夾檔案
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) 
 					out.writeBytes(f.FolderSelect(2));  //傳回影片資料夾檔案
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) 
 					out.writeBytes(f.FolderSelect(3));  //傳回簡報資料夾檔案
-				
+
 //				//客戶端要求開啟檔案
 				else
 				{

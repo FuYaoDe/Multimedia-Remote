@@ -39,7 +39,7 @@ public class Folder { //用於取得資料夾內的檔案
 		}
 		if(File==null){
 		System.out.print("no file");
-			return "NoFile";
+			return "NoFile//s";
 		}
 		else
 			return File;

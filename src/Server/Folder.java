@@ -71,62 +71,70 @@ public class Folder { //用於取得資料夾內的檔案
 		String Full_File_WMP="\\Program Files\\Windows Media Player\\wmplayer.exe ";
 		String Full_File_WMP2="\\Program Files (x86)\\Windows Media Player\\wmplayer.exe ";
 		String Full_File_PPT="\\Program Files\\Microsoft Office\\OFFICE14\\POWERPNT.EXE ";
-		String Run_File[] = Run_Files.split("//s");
-		myPnt = new File(winPath.substring(0, 2)+Full_File_WMP);
-		if(myPnt.exists()){ //撥放器存在
-			Full_File_WMP = winPath.substring(0, 2)+Full_File_WMP;
-		}else{
-			myPnt = new File(winPath.substring(0, 2)+Full_File_WMP2);
-			if(myPnt.exists()){ //撥放器存在
-				Full_File_WMP = winPath.substring(0, 2)+Full_File_WMP2;
-			}else{
-				Full_File_WMP = "";
-			}
-		}
-		boolean Have_PPT = false;
-		for(int num=0; num<ppt_exe.length; num++ ){
-			myPnt = new File(winPath.substring(0, 2)+ppt_exe[num]);
-			if(myPnt.exists()){ //PPT存在
-				System.out.println("PPT EXIST");
-				Have_PPT = true;
-				Full_File_PPT = winPath.substring(0, 2)+ppt_exe[num];
-				break;
-			}
-		}
-		if(!Have_PPT){ //PPT不存在
-			Full_File_PPT = "";
-			System.out.println("PPT NOT EXIST");
-		}
-		System.out.printf("Run_File=%s",Run_File[0]);
-		System.out.printf("Run_File=%s",Run_File[1]);
-		if(Run_File[0].equalsIgnoreCase("MRCode_Run_Music")){ //執行音樂資料夾檔案
-			if(Full_File_WMP.isEmpty()) return 0;
-			for(int i=1; i < Run_File.length; i++)
-				Full_File_WMP += "\""+GUI.getMusicPath()+Run_File[i]+"\" ";
-				//加上""是為了避免空白或其他因素導致開啟檔案失敗
-			Full_File = Full_File_WMP;
-		}else if(Run_File[0].equalsIgnoreCase("MRCode_Run_Videos")){//執行影片資料夾檔案
-			if(Full_File_WMP.isEmpty()) return 0;
-			Full_File_WMP += "\""+GUI.getVideoPath()+Run_File[1]+"\"";
-			Full_File = Full_File_WMP;
-		}else if(Run_File[0].equalsIgnoreCase("MRCode_Run_Documents")){ //執行PPT資料夾檔案
-
-			System.out.println("MRCode_Run_Documents");
-			if(Full_File_PPT.isEmpty()) return 0;
-			Full_File_PPT += "\""+GUI.getPointPath()+Run_File[1]+"\"";
-			Full_File = Full_File_PPT;
-			//Program.findProgram(".ppt").execute(GUI.getPointPath()+Run_File[1]);
-			//return 1;
-		}else{ //錯誤的指令
-			return 0;
-		}
 		
-		try{
+		try {
+			String Run_File[] = Run_Files.split("//s");
+			myPnt = new File(winPath.substring(0, 2)+Full_File_WMP);
+			if(myPnt.exists()){ //撥放器存在
+				Full_File_WMP = "\""+winPath.substring(0, 2)+Full_File_WMP+"\"";
+			}else{
+				myPnt = new File(winPath.substring(0, 2)+Full_File_WMP2);
+				if(myPnt.exists()){ //撥放器存在
+					Full_File_WMP = "\""+winPath.substring(0, 2)+Full_File_WMP2+"\"";
+				}else{
+					Full_File_WMP = "";
+				}
+			}
+			boolean Have_PPT = false;
+			for(int num=0; num<ppt_exe.length; num++ ){
+				myPnt = new File(winPath.substring(0, 2)+ppt_exe[num]);
+				if(myPnt.exists()){ //PPT存在
+					System.out.println("PPT EXIST");
+					Have_PPT = true;
+					Full_File_PPT ="\""+ winPath.substring(0, 2)+ppt_exe[num] +"\"";
+					break;
+				}
+			}
+			if(!Have_PPT){ //PPT不存在
+				Full_File_PPT = "";
+				System.out.println("PPT NOT EXIST");
+			}
+			System.out.printf("Run_File=%s",Run_File[0]);
+			System.out.printf("Run_File=%s",Run_File[1]);
+			if(Run_File[0].equalsIgnoreCase("MRCode_Run_Music")){ //執行音樂資料夾檔案
+				if(Full_File_WMP.isEmpty()) return 0;
+				for(int i=1; i < Run_File.length; i++)
+					Full_File_WMP += "\""+GUI.getMusicPath()+Run_File[i]+"\" ";
+					//加上""是為了避免空白或其他因素導致開啟檔案失敗
+				Full_File = Full_File_WMP;
+			}else if(Run_File[0].equalsIgnoreCase("MRCode_Run_Videos")){//執行影片資料夾檔案
+				if(Full_File_WMP.isEmpty()) return 0;
+				Full_File_WMP += "\""+GUI.getVideoPath()+Run_File[1]+"\"";
+				Full_File = Full_File_WMP;
+			}else if(Run_File[0].equalsIgnoreCase("MRCode_Run_Documents")){ //執行PPT資料夾檔案
+
+				System.out.println("MRCode_Run_Documents");
+				if(Full_File_PPT.isEmpty()) return 0;
+				Full_File_PPT += "\""+GUI.getPointPath()+Run_File[1]+"\"";
+				Full_File = Full_File_PPT;
+				//Program.findProgram(".ppt").execute(GUI.getPointPath()+Run_File[1]);
+				//return 1;
+			}else{ //錯誤的指令
+				return 0;
+			}
 			System.out.println("執行的指令："+Full_File);
 			Runtime.getRuntime().exec(Full_File);  //用於執行DOS指令
-		}catch(Exception e){
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			return -1;
 		}
+//		try{
+//			System.out.println("執行的指令："+Full_File);
+//			Runtime.getRuntime().exec(Full_File);  //用於執行DOS指令
+//		}catch(Exception e){
+//			System.out.println(e.getMessage());
+//			return -1;
+//		}
 		return 1;
 	}
 	/*------------------------------------------------------------

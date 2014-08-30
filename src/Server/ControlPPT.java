@@ -101,6 +101,7 @@ public class ControlPPT {
 			Robot robot = new Robot();
 			robot.keyPress(KeyEvent.VK_PAGE_DOWN);
 			robot.keyRelease(KeyEvent.VK_PAGE_DOWN);
+			System.out.println("¤U¤@­¶");
 		} catch (AWTException e) {
 			e.printStackTrace();
 		}

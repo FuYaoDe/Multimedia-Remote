@@ -160,13 +160,13 @@ class ClientThread implements Runnable {
 					System.out.println(f.Strat_File(FromClient.trim()));
 					int Run_ok = f.Strat_File(FromClient.trim());
 					if(Run_ok==1){
-						out.writeBytes(StringtoUnicode("open_okay-->"));
+						out.writeBytes(StringtoUnicode("open_okay//s"));
 						System.out.println("執行檔案成功！");
 					}else if(Run_ok==-1){
-						out.writeBytes(StringtoUnicode("open_failed-->"));
+						out.writeBytes(StringtoUnicode("open_failed//s"));
 						System.out.println("執行檔案失敗！");
 					}else{
-						out.writeBytes(StringtoUnicode("open_cmd_error-->"));
+						out.writeBytes(StringtoUnicode("open_cmd_error//s"));
 						System.out.println("錯誤的指令！");
 					}
 				}

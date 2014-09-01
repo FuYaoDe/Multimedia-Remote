@@ -99,8 +99,8 @@ public class Folder { //用於取得資料夾內的檔案
 				Full_File_PPT = "";
 				System.out.println("PPT NOT EXIST");
 			}
-			System.out.printf("Run_File=%s",Run_File[0]);
-			System.out.printf("Run_File=%s",Run_File[1]);
+//			System.out.printf("Run_File=%s",Run_File[0]);
+//			System.out.printf("Run_File=%s",Run_File[1]);
 			if(Run_File[0].equalsIgnoreCase("MRCode_Run_Music")){ //執行音樂資料夾檔案
 				if(Full_File_WMP.isEmpty()) return 0;
 				for(int i=1; i < Run_File.length; i++)

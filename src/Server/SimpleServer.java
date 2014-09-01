@@ -1,6 +1,8 @@
 package Server;
 
 import java.net.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.io.*;
 
 import javax.swing.InputMap;
@@ -47,6 +49,33 @@ class ClientThread implements Runnable {
 		this.ss = ss;
 	}
 	
+	public static String StringtoUnicode(String str) {
+        char[] arChar = str.toCharArray();
+        int iValue = 0;
+        String uStr = "";
+        for (int i = 0; i < arChar.length; i++) {
+            iValue = (int) str.charAt(i);
+            if (iValue <= 256) {
+                uStr += "\\u00" + Integer.toHexString(iValue);
+            } else {
+                uStr += "\\u" + Integer.toHexString(iValue);
+            }
+        }
+        return uStr;
+    }
+	
+	public static String unicodeToString(String str) {
+		 
+	    Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");    
+	    Matcher matcher = pattern.matcher(str);
+	    char ch;
+	    while (matcher.find()) {
+	        ch = (char) Integer.parseInt(matcher.group(2), 16);
+	        str = str.replace(matcher.group(1), ch + "");    
+	    }
+	    return str;
+	}
+	
 	public void run() {
 		try {
 			while(true) {
@@ -65,7 +94,8 @@ class ClientThread implements Runnable {
 	
 				
 				// 至客戶端接收的資料
-				String FromClient = line;
+//				String FromClient = line;
+				String FromClient = unicodeToString(line);
 				System.out.println("客戶端送來的訊息： \""+FromClient+"\"");
 				
 				ss.getInetAddress();
@@ -115,11 +145,14 @@ class ClientThread implements Runnable {
 				//客戶端要求資料夾內含的檔案資訊傳輸
 
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) 
-					out.writeBytes(f.FolderSelect(1));  //傳回音樂資料夾檔案
+//					out.writeBytes(f.FolderSelect(1));  //傳回音樂資料夾檔案
+					out.writeBytes(StringtoUnicode(f.FolderSelect(1)));  //傳回音樂資料夾檔案
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) 
-					out.writeBytes(f.FolderSelect(2));  //傳回影片資料夾檔案
+//					out.writeBytes(f.FolderSelect(2));  //傳回影片資料夾檔案
+					out.writeBytes(StringtoUnicode(f.FolderSelect(2)));  //傳回影片資料夾檔案
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) 
-					out.writeBytes(f.FolderSelect(3));  //傳回簡報資料夾檔案
+//					out.writeBytes(f.FolderSelect(3));  //傳回簡報資料夾檔案
+					out.writeBytes(StringtoUnicode(f.FolderSelect(3)));  //傳回簡報資料夾檔案
 
 //				//客戶端要求開啟檔案
 				else

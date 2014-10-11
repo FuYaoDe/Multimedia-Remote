@@ -4,7 +4,7 @@ import java.io.File;
 
 public class Folder { //用於取得資料夾內的檔案
 	private File root; //File型態物件的root(空)
-	GUI_Main GUI = new GUI_Main();;
+	GUI_Main GUI = new GUI_Main();
 	public String Video_File;
 	public String Music_File;
 	public String Point_File;

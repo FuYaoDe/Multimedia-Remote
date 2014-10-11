@@ -44,9 +44,11 @@ class ClientThread implements Runnable {
 	DataInputStream  in;
 	DataOutputStream out;
 	BufferedReader br ;
+	Log frame = new Log();
 	// 建構函式
 	public ClientThread(ServerSocket ss) throws Exception {
 		this.ss = ss;
+		frame.setVisible(true);
 	}
 
 	public static String StringtoUnicode(String str) {
@@ -97,6 +99,7 @@ class ClientThread implements Runnable {
 				//				String FromClient = line;
 				String FromClient = unicodeToString(line);
 				System.out.println("客戶端送來的訊息： \""+FromClient+"\"");
+				frame.textPane.setText(frame.textPane.getText()+"\n客戶端送來的訊息： \""+FromClient+"\"\n");
 
 				ss.getInetAddress();
 
@@ -110,6 +113,7 @@ class ClientThread implements Runnable {
 				if(FromClient.equalsIgnoreCase("connect")) {
 					out.writeBytes(StringtoUnicode("connect"));//開始連
 					System.out.println("發現客戶端！");
+					frame.textPane.setText(frame.textPane.getText()+"發現客戶端！");
 				}
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_00")) cc.sleep(); //休眠
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_01")) cc.reset(); //重新開機
@@ -146,28 +150,40 @@ class ClientThread implements Runnable {
 
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) 
 					//					out.writeBytes(f.FolderSelect(1));  //傳回音樂資料夾檔案
+				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(1))); 	 //傳回音樂資料夾檔案
+					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(1)+"");
+				}
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) 
 					//					out.writeBytes(f.FolderSelect(2));  //傳回影片資料夾檔案
+				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(2)));  	//傳回影片資料夾檔案
+					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(2)+"");
+				}
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) 
 					//					out.writeBytes(f.FolderSelect(3));  //傳回簡報資料夾檔案
+				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(3)));  	//傳回簡報資料夾檔案
-
+					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(3)+"");
+				}
 				//客戶端要求開啟檔案
 				else
 				{
 					System.out.println(f.Strat_File(FromClient.trim()));
+					frame.textPane.setText(frame.textPane.getText()+f.Strat_File(FromClient.trim())+"");
 					int Run_ok = f.Strat_File(FromClient.trim());
 					if(Run_ok==1){
 						out.writeBytes(StringtoUnicode("open_okay//s"));
 						System.out.println("執行檔案成功！");
+						frame.textPane.setText(frame.textPane.getText()+"\n執行檔案成功！");
 					}else if(Run_ok==-1){
 						out.writeBytes(StringtoUnicode("open_failed//s"));
 						System.out.println("執行檔案失敗！");
+						frame.textPane.setText(frame.textPane.getText()+"\n執行檔案失敗！");
 					}else{
 						out.writeBytes(StringtoUnicode("open_cmd_error//s"));
 						System.out.println("錯誤的指令！");
+						frame.textPane.setText(frame.textPane.getText()+"\n錯誤的指令！");
 					}
 				}
 
@@ -175,6 +191,7 @@ class ClientThread implements Runnable {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();//列印異常資訊
+			frame.textPane.setText(frame.textPane.getText()+"\n錯誤:\n"+e.getMessage());
 		} finally {//用finally語句塊確保動作執行
 			try{
 				if(in != null){
@@ -189,6 +206,7 @@ class ClientThread implements Runnable {
 			}
 			catch(Exception e){
 				e.printStackTrace();//列印異常資訊
+				frame.textPane.setText(frame.textPane.getText()+"\n錯誤:\n"+e.getMessage());
 			}
 		}
 	}

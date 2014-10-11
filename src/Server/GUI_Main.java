@@ -3,7 +3,10 @@ package Server;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 public class GUI_Main extends JFrame {
     private JButton Btn_Music_Source;
@@ -168,7 +171,23 @@ public class GUI_Main extends JFrame {
         
         try{
         	InetAddress myComputer = InetAddress.getLocalHost() ;
-            jLabel5.setText("本機IP位址："+myComputer.getHostAddress());
+        	String IP ="";
+//            jLabel5.setText("本機IP位址："+myComputer.getHostAddress());
+            Enumeration e = NetworkInterface.getNetworkInterfaces();
+            while(e.hasMoreElements())
+            {
+                NetworkInterface n = (NetworkInterface) e.nextElement();
+                Enumeration ee = n.getInetAddresses();
+                while (ee.hasMoreElements())
+                {
+                    InetAddress i = (InetAddress) ee.nextElement();
+                    if(i.getHostAddress().indexOf(":")==-1 && !i.getHostAddress().equals("127.0.0.1")){
+//                    	 System.out.println(i.getHostAddress());
+                    	IP+=i.getHostAddress()+"、";
+                    }
+                }
+            }
+            jLabel5.setText("本機IP位址："+IP.substring(0, IP.length()-1));
         }catch(Exception e){}
 
 

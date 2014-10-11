@@ -23,6 +23,7 @@ public class GUI_Main extends JFrame {
     private JLabel jLabel4;
     private JLabel jLabel5;
 	private static String Music_File, Point_File, Video_File; //用於存放資料夾的路徑
+
 	private static final int PORT = 3579; //伺服器使用的port
 	
 	public static void main(String args[]) {
@@ -209,7 +210,7 @@ public class GUI_Main extends JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(Video_Source, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Music_Source, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Point_Source, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Point_Source, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Btn_Video_Source, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)

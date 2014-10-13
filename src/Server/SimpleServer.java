@@ -1,6 +1,9 @@
 package Server;
 
 import java.net.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.*;
@@ -51,6 +54,32 @@ class ClientThread implements Runnable {
 		frame.setVisible(true);
 	}
 
+	private String getTime(){
+		// 格式化
+		SimpleDateFormat nowdate = 
+				//new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+				new java.text.SimpleDateFormat("HH:mm:ss"); 
+
+		// GMT標準時間往後加八小時
+		nowdate.setTimeZone(TimeZone.getTimeZone("GMT+8"));
+
+		// 取得目前時間
+		String sdate = nowdate.format(new java.util.Date());
+		return sdate;
+	}
+	
+	private void setLogViewText(String msg){
+
+		System.out.println(msg+" @"+getTime());
+		frame.textPane.setText(frame.textPane.getText()
+				+"\n客戶端送來的訊息： \"" // 訊息前綴
+				+msg				// 訊息本體
+				+"\""				
+				+" @"+getTime()			// 加上時間
+				);			
+		
+	}
+	
 	public static String StringtoUnicode(String str) {
 		char[] arChar = str.toCharArray();
 		int iValue = 0;
@@ -101,18 +130,15 @@ class ClientThread implements Runnable {
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
 				String  line = br.readLine();
-				// 輸出未解碼訊息至主控台
-				//System.out.println("客戶端送來的訊息： \""+line+"\"");
-				// 輸出未解碼訊息至log視窗
-				//frame.textPane.setText(frame.textPane.getText()+"\n客戶端送來的原始訊息： \""+line+"\"\n");
+				// 輸出未解碼訊息至主控台/log視窗
+				//setLogViewText(line);
 
 
 				// 至客戶端接收的資料
 				String FromClient = unicodeToString(line);
-				frame.textPane.setText(frame.textPane.getText()+"\n客戶端送來的訊息： \""+FromClient+"\"\n");
+				setLogViewText(FromClient);
 
 				ss.getInetAddress();
-
 
 				ControlWMP wmp = new ControlWMP();
 				ControlPPT ppt = new ControlPPT();
@@ -122,8 +148,7 @@ class ClientThread implements Runnable {
 
 				if(FromClient.equalsIgnoreCase("connect")) {
 					out.writeBytes(StringtoUnicode("connect"));//開始連
-					System.out.println("發現客戶端！");
-					frame.textPane.setText(frame.textPane.getText()+"發現客戶端！");
+					setLogViewText("發現客戶端！");
 				}
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_00")) cc.sleep(); //休眠
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_01")) cc.reset(); //重新開機
@@ -154,11 +179,12 @@ class ClientThread implements Runnable {
 				else if(FromClient.equalsIgnoreCase("MRCode_PPT_15")) ppt.VolumeReduce(); //降低音量
 
 				//				//接收到客戶端廣播欲取得伺服端IP資料
-				else if(FromClient.equalsIgnoreCase("MRCode_Return")) out.writeUTF(ss.getInetAddress().getLocalHost().getHostAddress());
-				//				
-				//客戶端要求資料夾內含的檔案資訊傳輸
-
-				else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) 
+				else if(FromClient.equalsIgnoreCase("MRCode_Return")) {
+					ss.getInetAddress();
+					out.writeUTF(InetAddress.getLocalHost().getHostAddress());
+					//				
+					//客戶端要求資料夾內含的檔案資訊傳輸
+				} else if(FromClient.equalsIgnoreCase("MRCode_Show_Music")) 
 					//					out.writeBytes(f.FolderSelect(1));  //傳回音樂資料夾檔案
 				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(1))); 	 //傳回音樂資料夾檔案
@@ -179,7 +205,7 @@ class ClientThread implements Runnable {
 				// 客戶端送來'null'
 				else if(FromClient.equalsIgnoreCase("null")){
 					
-					frame.textPane.setText(frame.textPane.getText()+"客戶端送來 \"null\", 請檢查網路連線");
+					setLogViewText("客戶端送來 \"null\", 請檢查網路連線");
 					
 				}
 				//客戶端要求開啟檔案
@@ -190,16 +216,13 @@ class ClientThread implements Runnable {
 					int Run_ok = f.Strat_File(FromClient.trim());
 					if(Run_ok==1){
 						out.writeBytes(StringtoUnicode("open_okay//s"));
-						System.out.println("執行檔案成功！");
-						frame.textPane.setText(frame.textPane.getText()+"\n執行檔案成功！");
+						setLogViewText("執行檔案成功！");
 					}else if(Run_ok==-1){
 						out.writeBytes(StringtoUnicode("open_failed//s"));
-						System.out.println("執行檔案失敗！");
-						frame.textPane.setText(frame.textPane.getText()+"\n執行檔案失敗！");
+						setLogViewText("執行檔案失敗！");
 					}else{
 						out.writeBytes(StringtoUnicode("open_cmd_error//s"));
-						System.out.println("錯誤的指令！");
-						frame.textPane.setText(frame.textPane.getText()+"\n錯誤的指令！");
+						setLogViewText("錯誤的指令！");
 					}
 				}
 
@@ -207,7 +230,7 @@ class ClientThread implements Runnable {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();//列印異常資訊
-			frame.textPane.setText(frame.textPane.getText()+"\n錯誤:\n"+e.getMessage());
+			setLogViewText("錯誤:\n"+e.getMessage());
 		} finally {//用finally語句塊確保動作執行
 			try{
 				if(in != null){
@@ -222,7 +245,7 @@ class ClientThread implements Runnable {
 			}
 			catch(Exception e){
 				e.printStackTrace();//列印異常資訊
-				frame.textPane.setText(frame.textPane.getText()+"\n錯誤:\n"+e.getMessage());
+				setLogViewText("錯誤:\n"+e.getMessage());
 			}
 		}
 	}

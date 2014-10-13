@@ -68,13 +68,21 @@ class ClientThread implements Runnable {
 
 	public static String unicodeToString(String str) {
 
-		Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");    
-		Matcher matcher = pattern.matcher(str);
-		char ch;
-		while (matcher.find()) {
-			ch = (char) Integer.parseInt(matcher.group(2), 16);
-			str = str.replace(matcher.group(1), ch + "");    
+		if(str!=null){
+
+			Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");    
+			Matcher matcher = pattern.matcher(str);
+			char ch;
+			while (matcher.find()) {
+				ch = (char) Integer.parseInt(matcher.group(2), 16);	
+				str = str.replace(matcher.group(1), ch + "");    
+			}
+		}else {
+			
+			str="null";
+			
 		}
+
 		return str;
 	}
 
@@ -93,12 +101,14 @@ class ClientThread implements Runnable {
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
 				String  line = br.readLine();
+				// 輸出未解碼訊息至主控台
+				//System.out.println("客戶端送來的訊息： \""+line+"\"");
+				// 輸出未解碼訊息至log視窗
+				//frame.textPane.setText(frame.textPane.getText()+"\n客戶端送來的原始訊息： \""+line+"\"\n");
 
 
 				// 至客戶端接收的資料
-				//				String FromClient = line;
 				String FromClient = unicodeToString(line);
-				System.out.println("客戶端送來的訊息： \""+FromClient+"\"");
 				frame.textPane.setText(frame.textPane.getText()+"\n客戶端送來的訊息： \""+FromClient+"\"\n");
 
 				ss.getInetAddress();
@@ -165,6 +175,12 @@ class ClientThread implements Runnable {
 				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(3)));  	//傳回簡報資料夾檔案
 					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(3)+"");
+				}
+				// 客戶端送來'null'
+				else if(FromClient.equalsIgnoreCase("null")){
+					
+					frame.textPane.setText(frame.textPane.getText()+"客戶端送來 \"null\", 請檢查網路連線");
+					
 				}
 				//客戶端要求開啟檔案
 				else

@@ -71,12 +71,12 @@ class ClientThread implements Runnable {
 	private void setLogViewText(String msg){
 
 		System.out.println(msg+" @"+getTime());
-		frame.textPane.setText(frame.textPane.getText()
-				+"\n客戶端送來的訊息： \"" // 訊息前綴
+		frame.textPane.setText(
+				"\n客戶端送來的訊息： \"" // 訊息前綴
 				+msg				// 訊息本體
 				+"\""				
 				+" @"+getTime()			// 加上時間
-				);			
+				+frame.textPane.getText());			
 		
 	}
 	
@@ -126,17 +126,26 @@ class ClientThread implements Runnable {
 				// 建立用戶端的輸出串流
 				out = new DataOutputStream(cs.getOutputStream());
 
-
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
 
-				String  line = br.readLine();
+				String  line = null;
+				
+				// 只在socket有連線狀態才讀取
+				if(!cs.isClosed()) {
+					line = br.readLine();
+				}
+				
+				
+				
 				// 輸出未解碼訊息至主控台/log視窗
 				//setLogViewText(line);
-
 
 				// 至客戶端接收的資料
 				String FromClient = unicodeToString(line);
 				setLogViewText(FromClient);
+				
+				// 自我回傳
+				//out.writeBytes(StringtoUnicode(FromClient));
 
 				ss.getInetAddress();
 

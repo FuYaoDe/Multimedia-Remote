@@ -127,10 +127,6 @@ class ClientThread implements Runnable {
 				out = new DataOutputStream(cs.getOutputStream());
 
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-<<<<<<< HEAD
-				
-				String  line = br.readLine();
-=======
 
 				String  line = null;
 				
@@ -138,10 +134,7 @@ class ClientThread implements Runnable {
 				if(!cs.isClosed()) {
 					line = br.readLine();
 				}
-				
-				
-				
->>>>>>> a6b7a34ba9015d093c93ec40bc4461819ab36788
+
 				// 輸出未解碼訊息至主控台/log視窗
 				//setLogViewText(line);
 

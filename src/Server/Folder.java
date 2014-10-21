@@ -163,17 +163,22 @@ public class Folder { //用於取得資料夾內的檔案
 		//將root.listFiles()整個跑一遍，並將每一次的值讀到controlFolder
 		//主要用於抓取指定目錄底下所有的資料夾、檔案
 		String File = null;
-		for (File controlFolder : root.listFiles(new ExtensionFileFilter(fileExtension)) ){ 
-			// 取出副檔名方法
-			if(controlFolder.isFile()){ //如果controlFolder是一個檔案
-				//輸出：取得該檔案名稱
-				if(File==null)
-					File = controlFolder.getName() + "//s";
-				else
-					File += controlFolder.getName() + "//s"; // //s是結合符號，等候傳送到客戶端可以進行拆解
+		try {
+			for (File controlFolder : root.listFiles(new ExtensionFileFilter(fileExtension)) ){ 
+				// 取出副檔名方法
+				if(controlFolder.isFile()){ //如果controlFolder是一個檔案
+					//輸出：取得該檔案名稱
+					if(File==null)
+						File = controlFolder.getName() + "//s";
+					else
+						File += controlFolder.getName() + "//s"; // //s是結合符號，等候傳送到客戶端可以進行拆解
+				}
 			}
+			System.err.println(File);
+			return File;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
 		}
-		System.err.println(File);
-		return File;
 	}
 }

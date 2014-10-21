@@ -128,7 +128,7 @@ class ClientThread implements Runnable {
 
 
 				br = new BufferedReader(new InputStreamReader(cs.getInputStream()));
-
+				
 				String  line = br.readLine();
 				// 輸出未解碼訊息至主控台/log視窗
 				//setLogViewText(line);

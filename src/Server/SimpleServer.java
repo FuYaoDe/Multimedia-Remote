@@ -68,15 +68,26 @@ class ClientThread implements Runnable {
 		return sdate;
 	}
 	
-	private void setLogViewText(String msg){
-
-		System.out.println(msg+" @"+getTime());
-		frame.textPane.setText(
-				"\n客戶端送來的訊息： \"" // 訊息前綴
-				+msg				// 訊息本體
-				+"\""				
-				+" @"+getTime()			// 加上時間
-				+frame.textPane.getText());			
+	private void setLogViewText(String msg ,int flag){
+		if(flag==1){
+			System.out.println(msg+" @"+getTime());
+			frame.textPane.setText(
+					"\n客戶端送來的訊息： \"" // 訊息前綴
+					+msg				// 訊息本體
+					+"\""				
+					+" @"+getTime()			// 加上時間
+					+"-----------------------------------"
+					+frame.textPane.getText().replace("-----------------------------------", ""));			
+		}else if (flag==2){
+			System.out.println(msg+" @"+getTime());
+			frame.textPane.setText(
+					"\nServer Log： \"" // 訊息前綴
+					+msg				// 訊息本體
+					+"\""				
+					+" @"+getTime()			// 加上時間
+					+"-----------------------------------"
+					+frame.textPane.getText().replace("-----------------------------------", ""));				
+		}
 		
 	}
 	
@@ -140,7 +151,7 @@ class ClientThread implements Runnable {
 
 				// 至客戶端接收的資料
 				String FromClient = unicodeToString(line);
-				setLogViewText(FromClient);
+				setLogViewText(FromClient,1);
 				
 				// 自我回傳
 				//out.writeBytes(StringtoUnicode(FromClient));
@@ -152,11 +163,20 @@ class ClientThread implements Runnable {
 				ControlComputer cc = new ControlComputer();
 				Folder f = new Folder();
 				//電腦控制部分
-
-				if(FromClient.equalsIgnoreCase("connect")) {
-					out.writeBytes(StringtoUnicode("connect"));//開始連
-					setLogViewText("發現客戶端！");
+				
+				if(!(FromClient.equalsIgnoreCase("MRCode_Return")||
+				   FromClient.equalsIgnoreCase("MRCode_Show_Videos")||
+				   FromClient.equalsIgnoreCase("MRCode_Show_Documents"))){
+					
+					out.writeBytes(line);
 				}
+				
+				
+				if(FromClient.equalsIgnoreCase("connect")) {
+//					out.writeBytes(StringtoUnicode("connect"));//開始連
+					setLogViewText("發現客戶端！",1);
+				}
+				
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_00")) cc.sleep(); //休眠
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_01")) cc.reset(); //重新開機
 				else if(FromClient.equalsIgnoreCase("MRCode_CC_02")) cc.powerOff(); //關機
@@ -185,7 +205,7 @@ class ClientThread implements Runnable {
 				else if(FromClient.equalsIgnoreCase("MRCode_PPT_14")) ppt.VolumeIncrease(); //增加音量
 				else if(FromClient.equalsIgnoreCase("MRCode_PPT_15")) ppt.VolumeReduce(); //降低音量
 
-				//				//接收到客戶端廣播欲取得伺服端IP資料
+					//接收到客戶端廣播欲取得伺服端IP資料
 				else if(FromClient.equalsIgnoreCase("MRCode_Return")) {
 					ss.getInetAddress();
 					out.writeUTF(InetAddress.getLocalHost().getHostAddress());
@@ -195,41 +215,44 @@ class ClientThread implements Runnable {
 					//					out.writeBytes(f.FolderSelect(1));  //傳回音樂資料夾檔案
 				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(1))); 	 //傳回音樂資料夾檔案
-					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(1)+"");
+//					frame.textPane.setText(f.FolderSelect(1)+frame.textPane.getText());
+					setLogViewText(f.FolderSelect(1),2);
 				}
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Videos")) 
 					//					out.writeBytes(f.FolderSelect(2));  //傳回影片資料夾檔案
 				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(2)));  	//傳回影片資料夾檔案
-					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(2)+"");
+//					frame.textPane.setText(f.FolderSelect(2)+frame.textPane.getText());
+					setLogViewText(f.FolderSelect(2),2);
 				}
 				else if(FromClient.equalsIgnoreCase("MRCode_Show_Documents")) 
 					//					out.writeBytes(f.FolderSelect(3));  //傳回簡報資料夾檔案
 				{
 					out.writeBytes(StringtoUnicode(f.FolderSelect(3)));  	//傳回簡報資料夾檔案
-					frame.textPane.setText(frame.textPane.getText()+f.FolderSelect(3)+"");
+//					frame.textPane.setText(f.FolderSelect(3)+frame.textPane.getText());
+					setLogViewText(f.FolderSelect(3),2);
 				}
 				// 客戶端送來'null'
 				else if(FromClient.equalsIgnoreCase("null")){
 					
-					setLogViewText("客戶端送來 \"null\", 請檢查網路連線");
+					setLogViewText("客戶端送來 \"null\", 請檢查網路連線",1);
 					
 				}
 				//客戶端要求開啟檔案
 				else
 				{
 					System.out.println(f.Strat_File(FromClient.trim()));
-					frame.textPane.setText(frame.textPane.getText()+f.Strat_File(FromClient.trim())+"");
+					frame.textPane.setText(f.Strat_File(FromClient.trim()) + frame.textPane.getText());
 					int Run_ok = f.Strat_File(FromClient.trim());
 					if(Run_ok==1){
 						out.writeBytes(StringtoUnicode("open_okay//s"));
-						setLogViewText("執行檔案成功！");
+						setLogViewText("執行檔案成功！",2);
 					}else if(Run_ok==-1){
 						out.writeBytes(StringtoUnicode("open_failed//s"));
-						setLogViewText("執行檔案失敗！");
+						setLogViewText("執行檔案失敗！",2);
 					}else{
 						out.writeBytes(StringtoUnicode("open_cmd_error//s"));
-						setLogViewText("錯誤的指令！");
+						setLogViewText("錯誤的指令！",2);
 					}
 				}
 
@@ -237,7 +260,7 @@ class ClientThread implements Runnable {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();//列印異常資訊
-			setLogViewText("錯誤:\n"+e.getMessage());
+			setLogViewText("錯誤:\n"+e.getMessage(),2);
 		} finally {//用finally語句塊確保動作執行
 			try{
 				if(in != null){
@@ -252,7 +275,7 @@ class ClientThread implements Runnable {
 			}
 			catch(Exception e){
 				e.printStackTrace();//列印異常資訊
-				setLogViewText("錯誤:\n"+e.getMessage());
+				setLogViewText("錯誤:\n"+e.getMessage(),2);
 			}
 		}
 	}

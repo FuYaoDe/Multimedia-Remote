@@ -72,11 +72,11 @@ class ClientThread implements Runnable {
 		if(flag==1){
 			System.out.println(msg+" @"+getTime());
 			frame.textPane.setText(
-					"\n客戶端送來的訊息： \"" // 訊息前綴
+					"\nClient Log： \"" // 訊息前綴
 					+msg				// 訊息本體
 					+"\""				
 					+" @"+getTime()			// 加上時間
-					+"-----------------------------------"
+					+"\n-----------------------------------\n"
 					+frame.textPane.getText().replace("-----------------------------------", ""));			
 		}else if (flag==2){
 			System.out.println(msg+" @"+getTime());
@@ -85,7 +85,7 @@ class ClientThread implements Runnable {
 					+msg				// 訊息本體
 					+"\""				
 					+" @"+getTime()			// 加上時間
-					+"-----------------------------------"
+					+"\n-----------------------------------\n"
 					+frame.textPane.getText().replace("-----------------------------------", ""));				
 		}
 		

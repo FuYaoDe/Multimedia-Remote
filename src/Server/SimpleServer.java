@@ -167,8 +167,9 @@ class ClientThread implements Runnable {
 				if(!(FromClient.equalsIgnoreCase("MRCode_Return")||
 				   FromClient.equalsIgnoreCase("MRCode_Show_Videos")||
 				   FromClient.equalsIgnoreCase("MRCode_Show_Documents"))){
-					
-					out.writeBytes(line);
+					if(line!=null && !line.equals(""))
+						out.writeBytes(line);
+//						out.writeBytes(StringtoUnicode("OK"));
 				}
 				
 				
